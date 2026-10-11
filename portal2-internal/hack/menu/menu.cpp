@@ -118,7 +118,7 @@ namespace hack::menu {
         ImGui::Checkbox("autostrafer", &opts::autostrafer);
         if (ImGui::Checkbox("airacceleration_fix", &opts::airacceleration_fix) || (first_render && opts::airacceleration_fix))
             hack::features::misc::airacceleration_fix();
-        if (ImGui::Checkbox("unlock robot promo (skins/helmets)", &opts::robot_unlock_all) ||
+        if (ImGui::Checkbox("unlock all robot features", &opts::robot_unlock_all) ||
             (first_render && opts::robot_unlock_all))
             hack::features::misc::apply_robot_unlock();
 
