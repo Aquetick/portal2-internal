@@ -7,14 +7,17 @@ namespace hack::features::misc {
     //
     void airacceleration_fix();
     void apply_acceleration(const std::optional<float>& new_value = std::nullopt);
+    void apply_robot_unlock();
 
     // create-move
     //
     void bhop(c_usercmd* cmd);
     void autostrafer(c_usercmd* cmd);
+    void portal_any_surface();
 
     inline void create_move(c_usercmd* cmd) {
         autostrafer(cmd);
         bhop(cmd);
+        portal_any_surface();
     }
 } // namespace hack::features::misc

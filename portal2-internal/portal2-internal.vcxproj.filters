@@ -111,6 +111,12 @@
     <ClCompile Include="hack\features\misc\airacceleration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hack\features\misc\portal_any_surface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hack\features\misc\robot_unlock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="hack\hooks\hooked\override_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

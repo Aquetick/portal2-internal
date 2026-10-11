@@ -3,6 +3,51 @@
 #include "hack/hack.hpp"
 #include "util/util.hpp"
 #include <Windows.h>
+#include <cstdio>
+#include <string>
+
+namespace hack::menu {
+    namespace {
+        // small key picker button, stores picked key into *key
+        inline void key_picker(const char* id, int* key, bool& picking) {
+            ImGui::PushID(id);
+
+            auto key_name = [](int vk) -> std::string {
+                if (vk >= 0x41 && vk <= 0x5A)
+                    return std::string(1, static_cast<char>(vk));
+                if (vk >= 0x30 && vk <= 0x39)
+                    return std::string(1, static_cast<char>(vk));
+                if (vk == VK_XBUTTON1)
+                    return "Mouse4";
+                if (vk == VK_XBUTTON2)
+                    return "Mouse5";
+                if (vk == VK_MBUTTON)
+                    return "Mouse3";
+                char buf[16]{};
+                snprintf(buf, sizeof(buf), "0x%02X", vk);
+                return buf;
+            };
+
+            if (ImGui::Button(picking ? "..." : key_name(*key).c_str()))
+                picking = true;
+
+            if (picking) {
+                for (int vk = 0x08; vk <= 0xFE; ++vk) {
+                    if (vk == VK_INSERT || vk == VK_F2)
+                        continue;
+                    if (util::input::get(vk).m_state == util::input::e_button_state::pressed) {
+                        *key = vk;
+                        util::input::get(vk).m_state = util::input::e_button_state::held;
+                        picking = false;
+                        break;
+                    }
+                }
+            }
+
+            ImGui::PopID();
+        }
+    } // namespace
+} // namespace hack::menu
 
 namespace hack::menu {
     constexpr float_t kDefaultAirAccelerationValue = 5.f;
@@ -73,6 +118,9 @@ namespace hack::menu {
         ImGui::Checkbox("autostrafer", &opts::autostrafer);
         if (ImGui::Checkbox("airacceleration_fix", &opts::airacceleration_fix) || (first_render && opts::airacceleration_fix))
             hack::features::misc::airacceleration_fix();
+        if (ImGui::Checkbox("unlock robot promo (skins/helmets)", &opts::robot_unlock_all) ||
+            (first_render && opts::robot_unlock_all))
+            hack::features::misc::apply_robot_unlock();
 
         ImGui::Separator();
 
@@ -98,6 +146,19 @@ namespace hack::menu {
         ImGui::SameLine();
         if (ImGui::Button("Reset"))
             opts::fov_value = kDefaultFOVValue;
+
+        ImGui::Separator();
+
+        ImGui::Checkbox("any surface (always)", &opts::portal_any_surface);
+        ImGui::SameLine();
+        ImGui::Checkbox("any surface (hold)", &opts::portal_any_surface_hold);
+        ImGui::SameLine();
+        ImGui::Text("key:");
+        ImGui::SameLine();
+        {
+            static bool picking = false;
+            key_picker("any", &opts::portal_any_surface_key, picking);
+        }
 
         ImGui::Separator();
 

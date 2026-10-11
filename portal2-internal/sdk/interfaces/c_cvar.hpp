@@ -4,7 +4,8 @@
 class i_convar {
 public:
     char __pad[0x2C];
-    float m_float_value;
+    float m_float_value; // +0x2C (original features)
+    int m_int_value; // +0x30 (placement convars, proven in server.dll)
 };
 
 class c_cvar {

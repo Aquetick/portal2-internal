@@ -45,6 +45,11 @@ namespace opts {
     inline bool airacceleration_fix = false;
     inline float airacceleration_value = 5.f;
     inline float fov_value = 90.f;
+    inline bool robot_unlock_all = false;
+
+    inline bool portal_any_surface = false;
+    inline bool portal_any_surface_hold = true;
+    inline int portal_any_surface_key = 0x58; // X
 
     inline bool mat_ambient_light_enabled = false;
     inline constinit color_t mat_ambient_light_value = {0, 0, 0};

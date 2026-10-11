@@ -1,0 +1,19 @@
+name: build
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+      - name: Build
+        run: msbuild msvc\portal2-internal.sln /p:Configuration=Release /p:Platform=x86 /m /v:m
+      - name: Upload DLL
+        uses: actions/upload-artifact@v4
+        with:
+          name: portal2-internal-Release
+          path: msvc/output/Release/*
