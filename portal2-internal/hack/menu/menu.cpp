@@ -117,18 +117,23 @@ namespace hack::menu {
         static bool picking_any = false;
         static bool picking_boost = false;
 
-        // tab bar
+        // tab bar (note: never mutate `tab` inside the loop -
+        // Push/PopStyleColor must stay balanced within one iteration)
         const char* tabs[] = {"Movement", "Portals", "Visuals", "Config"};
+        int pending_tab = -1;
         for (int i = 0; i < 4; ++i) {
+            const bool is_active = (i == tab);
             if (i > 0)
                 ImGui::SameLine();
-            if (i == tab)
+            if (is_active)
                 ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered));
             if (ImGui::Button(tabs[i], ImVec2((kMenuWidth - 32.f) / 4.f, 24.f)))
-                tab = i;
-            if (i == tab)
+                pending_tab = i;
+            if (is_active)
                 ImGui::PopStyleColor();
         }
+        if (pending_tab >= 0)
+            tab = pending_tab;
 
         ImGui::Separator();
         ImGui::BeginChild("##page", ImVec2(0, 0), false);
@@ -176,6 +181,9 @@ namespace hack::menu {
             ImGui::Text("key:");
             ImGui::SameLine();
             key_picker("boost", &opts::portal_boost_key, picking_boost);
+            ImGui::SameLine();
+            if (ImGui::Button("Reset##boostkey"))
+                opts::portal_boost_key = 0x42; // B
 
             ImGui::SetNextItemWidth(200.f);
             ImGui::SliderFloat("multiplier", &opts::portal_boost_multiplier, 2.f, 8.f, "%.1fx");
@@ -192,6 +200,9 @@ namespace hack::menu {
             ImGui::Text("key:");
             ImGui::SameLine();
             key_picker("any", &opts::portal_any_surface_key, picking_any);
+            ImGui::SameLine();
+            if (ImGui::Button("Reset##anykey"))
+                opts::portal_any_surface_key = 0x58; // X
 
             ImGui::Separator();
 
@@ -296,5 +307,27 @@ namespace hack::menu {
         io.LogFilename = NULL;
         io.IniFilename = NULL;
         io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange; // fix annoying cursor flickering
+
+        ImGui::StyleColorsDark();
+
+        // match the index.html preview: dark blue-grey theme
+        auto& style = ImGui::GetStyle();
+        style.WindowRounding = 8.f;
+        style.FrameRounding = 4.f;
+        style.WindowPadding = ImVec2(14.f, 14.f);
+
+        auto& c = style.Colors;
+        c[ImGuiCol_WindowBg] = ImVec4(0.09f, 0.09f, 0.11f, 1.f);
+        c[ImGuiCol_ChildBg] = ImVec4(0.09f, 0.09f, 0.11f, 1.f);
+        c[ImGuiCol_TitleBg] = ImVec4(0.12f, 0.13f, 0.16f, 1.f);
+        c[ImGuiCol_TitleBgActive] = ImVec4(0.12f, 0.13f, 0.16f, 1.f);
+        c[ImGuiCol_Button] = ImVec4(0.15f, 0.16f, 0.20f, 1.f);
+        c[ImGuiCol_ButtonHovered] = ImVec4(0.17f, 0.20f, 0.28f, 1.f);
+        c[ImGuiCol_ButtonActive] = ImVec4(0.20f, 0.25f, 0.35f, 1.f);
+        c[ImGuiCol_FrameBg] = ImVec4(0.06f, 0.07f, 0.09f, 1.f);
+        c[ImGuiCol_FrameBgHovered] = ImVec4(0.10f, 0.11f, 0.15f, 1.f);
+        c[ImGuiCol_CheckMark] = ImVec4(0.49f, 0.91f, 0.47f, 1.f);
+        c[ImGuiCol_SliderGrab] = ImVec4(0.36f, 0.55f, 1.f, 1.f);
+        c[ImGuiCol_SliderGrabActive] = ImVec4(0.45f, 0.62f, 1.f, 1.f);
     }
 } // namespace hack::menu
