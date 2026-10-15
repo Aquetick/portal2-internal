@@ -28,29 +28,34 @@ namespace hack::features::misc {
         // No netvars needed - origin offsets are universal.
         bool feet_on_button(c_base_player* local) {
             const vec3_t feet = local->m_vecOrigin();
+            bool found = false;
 
-            const int hi = portal::entitylist->get_highest_entity_index();
-            if (hi <= 0 || hi > 4096)
+            // fixed range + SEH guard: entity-list helpers are unproven
+            // for arbitrary indices, so a fault here must only mean
+            // "no detection this tick" - never a crash.
+            __try {
+                for (int i = 0; i < 2048; ++i) {
+                    c_base_entity* e = portal::entitylist->get_client_entity(i);
+                    if (!e || e == reinterpret_cast<c_base_entity*>(local))
+                        continue;
+                    if (!class_has(e->get_client_class(), "button"))
+                        continue;
+
+                    const vec3_t o = e->m_vecOrigin();
+                    const float dx = feet.x - o.x;
+                    const float dy = feet.y - o.y;
+                    const float dz = feet.z - o.z;
+                    if (dx * dx + dy * dy > 40.f * 40.f)
+                        continue;
+                    if (dz < -8.f || dz > 34.f)
+                        continue;
+                    found = true;
+                    break;
+                }
+            } __except (EXCEPTION_EXECUTE_HANDLER) {
                 return false;
-
-            for (int i = 0; i <= hi; ++i) {
-                c_base_entity* e = portal::entitylist->get_client_entity(i);
-                if (!e || e == reinterpret_cast<c_base_entity*>(local))
-                    continue;
-                if (!class_has(e->get_client_class(), "button"))
-                    continue;
-
-                const vec3_t o = e->m_vecOrigin();
-                const float dx = feet.x - o.x;
-                const float dy = feet.y - o.y;
-                const float dz = feet.z - o.z;
-                if (dx * dx + dy * dy > 40.f * 40.f)
-                    continue;
-                if (dz < -8.f || dz > 34.f)
-                    continue;
-                return true;
             }
-            return false;
+            return found;
         }
     } // namespace
 
