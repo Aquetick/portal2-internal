@@ -117,8 +117,8 @@ namespace hack::menu {
         static bool picking_any = false;
         static bool picking_qsave = false;
         static bool picking_qload = false;
-        static bool picking_slowmo = false;
         static bool picking_edge = false;
+        static bool picking_btng = false;
 
         // tab bar (note: never mutate `tab` inside the loop -
         // Push/PopStyleColor must stay balanced within one iteration)
@@ -263,23 +263,6 @@ namespace hack::menu {
 
             ImGui::Separator();
 
-            ImGui::Text("Slow motion");
-            ImGui::Checkbox("slowmo enabled", &opts::slowmo);
-            ImGui::Checkbox("slowmo (hold)", &opts::slowmo_hold);
-            ImGui::SameLine();
-            ImGui::Text("key:");
-            ImGui::SameLine();
-            key_picker("slowmo", &opts::slowmo_key, picking_slowmo);
-
-            ImGui::SetNextItemWidth(200.f);
-            ImGui::SliderFloat("speed", &opts::slowmo_value, 0.1f, 2.f, "%.2fx");
-            if (opts::slowmo_value < 0.1f)
-                opts::slowmo_value = 0.1f;
-            if (opts::slowmo_value > 2.f)
-                opts::slowmo_value = 2.f;
-
-            ImGui::Separator();
-
             ImGui::Text("Edge jump");
             ImGui::Checkbox("edgejump enabled", &opts::edgejump);
             ImGui::Checkbox("edgejump (hold)", &opts::edgejump_hold);
@@ -292,6 +275,23 @@ namespace hack::menu {
 
             ImGui::Checkbox("fullbright", &opts::fullbright);
             ImGui::Checkbox("no fog", &opts::nofog);
+
+            ImGui::Separator();
+
+            ImGui::Text("Button glitch (1-tick)");
+            ImGui::Checkbox("button glitch enabled", &opts::button_glitch);
+            ImGui::Checkbox("button glitch (hold)", &opts::button_glitch_hold);
+            ImGui::SameLine();
+            ImGui::Text("key:");
+            ImGui::SameLine();
+            key_picker("btng", &opts::button_glitch_key, picking_btng);
+
+            ImGui::SetNextItemWidth(200.f);
+            ImGui::SliderInt("touch ticks", &opts::button_touch_ticks, 1, 5);
+            if (opts::button_touch_ticks < 1)
+                opts::button_touch_ticks = 1;
+            if (opts::button_touch_ticks > 5)
+                opts::button_touch_ticks = 5;
         } else {
             ImGui::Text("Config");
             ImGui::Separator();

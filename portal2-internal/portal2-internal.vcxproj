@@ -21,7 +21,7 @@
     <ClCompile Include="hack\features\misc\portal_any_surface.cpp" />
     <ClCompile Include="hack\features\misc\edgejump.cpp" />
     <ClCompile Include="hack\features\misc\quicksave.cpp" />
-    <ClCompile Include="hack\features\misc\slowmo.cpp" />
+    <ClCompile Include="hack\features\misc\buttonglitch.cpp" />
     <ClCompile Include="hack\features\misc\speedometer.cpp" />
     <ClCompile Include="hack\features\misc\tweaks.cpp" />
     <ClCompile Include="hack\features\visuals\change_portal_colors.cpp" />

@@ -73,15 +73,15 @@ namespace hack::cfg {
         push(&opts::jump_stats, "misc_jump_stats");
         push(&opts::quicksave_key, "misc_quicksave_key");
         push(&opts::quickload_key, "misc_quickload_key");
-        push(&opts::slowmo, "misc_slowmo");
-        push(&opts::slowmo_hold, "misc_slowmo_hold");
-        push(&opts::slowmo_key, "misc_slowmo_key");
-        push(&opts::slowmo_value, "misc_slowmo_value");
         push(&opts::edgejump, "misc_edgejump");
         push(&opts::edgejump_hold, "misc_edgejump_hold");
         push(&opts::edgejump_key, "misc_edgejump_key");
         push(&opts::fullbright, "misc_fullbright");
         push(&opts::nofog, "misc_nofog");
+        push(&opts::button_glitch, "misc_button_glitch");
+        push(&opts::button_glitch_hold, "misc_button_glitch_hold");
+        push(&opts::button_glitch_key, "misc_button_glitch_key");
+        push(&opts::button_touch_ticks, "misc_button_touch_ticks");
 
         push_chams(&opts::portal_gun_chams, "portal_gun_chams");
         push_chams(&opts::chell_chams, "chell_chams");

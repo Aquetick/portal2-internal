@@ -15,8 +15,8 @@ namespace hack::features::misc {
     void portal_any_surface();
     void edge_jump(c_usercmd* cmd);
     void jump_tracker(c_usercmd* cmd);
+    void button_glitch(c_usercmd* cmd);
     void quick_points();
-    void slowmo();
     void render_tweaks();
 
     // present (overlay)
@@ -34,14 +34,23 @@ namespace hack::features::misc {
         inline bool has_result = false;
     } // namespace jump
 
+    // button glitch helper state (detector writes, overlay reads)
+    //
+    namespace button {
+        inline bool touching = false;
+        inline int touch_ticks = 0;
+        inline int last_touch_ticks = 0;
+        inline bool has_last_touch = false;
+    } // namespace button
+
     inline void create_move(c_usercmd* cmd) {
         autostrafer(cmd);
         bhop(cmd);
         portal_any_surface();
         edge_jump(cmd);
         jump_tracker(cmd);
+        button_glitch(cmd);
         quick_points();
-        slowmo();
         render_tweaks();
     }
 

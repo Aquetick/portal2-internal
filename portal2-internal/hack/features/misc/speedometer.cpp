@@ -53,7 +53,7 @@ namespace hack::features::misc {
     }
 
     void speedometer_overlay() {
-        if (!opts::speedometer && !opts::jump_stats)
+        if (!opts::speedometer && !opts::jump_stats && !opts::button_glitch)
             return;
 
         if (!portal::players::local.get())
@@ -75,6 +75,13 @@ namespace hack::features::misc {
 
         if (opts::jump_stats && jump::has_result)
             ImGui::Text("last jump: %.0f u @ %.0f u/s", static_cast<double>(jump::last_distance), static_cast<double>(jump::last_speed));
+
+        if (opts::button_glitch) {
+            if (button::touching)
+                ImGui::Text("button: %d tick", button::touch_ticks);
+            else if (button::has_last_touch)
+                ImGui::Text("last touch: %d ticks", button::last_touch_ticks);
+        }
 
         ImGui::End();
     }
