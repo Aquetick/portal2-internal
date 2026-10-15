@@ -191,6 +191,13 @@ namespace hack::menu {
                 opts::portal_boost_multiplier = 2.f;
             if (opts::portal_boost_multiplier > 8.f)
                 opts::portal_boost_multiplier = 8.f;
+
+            ImGui::SetNextItemWidth(200.f);
+            ImGui::SliderFloat("surge time", &opts::portal_boost_duration, 0.1f, 1.f, "%.2fs");
+            if (opts::portal_boost_duration < 0.1f)
+                opts::portal_boost_duration = 0.1f;
+            if (opts::portal_boost_duration > 1.f)
+                opts::portal_boost_duration = 1.f;
         } else if (tab == 1) {
             ImGui::Text("Portals");
             ImGui::Separator();

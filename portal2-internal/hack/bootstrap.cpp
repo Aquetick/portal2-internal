@@ -48,6 +48,11 @@ namespace hack {
 
         void _shutdown() {
             TRACE_FN;
+            // never leave a timescale surge behind (portal boost safety)
+            if (portal::cvar) {
+                if (auto* ts = portal::cvar->find_convar("phys_timescale"))
+                    ts->m_float_value = 1.f;
+            }
             hooks::unhook();
             util::input::deinit();
             if (menu::opened)

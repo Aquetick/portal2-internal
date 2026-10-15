@@ -69,6 +69,7 @@ namespace hack::cfg {
         push(&opts::portal_boost_hold, "misc_portal_boost_hold");
         push(&opts::portal_boost_key, "misc_portal_boost_key");
         push(&opts::portal_boost_multiplier, "misc_portal_boost_multiplier");
+        push(&opts::portal_boost_duration, "misc_portal_boost_duration");
         push(&opts::portal_any_surface, "misc_portal_any_surface");
         push(&opts::portal_any_surface_hold, "misc_portal_any_surface_hold");
         push(&opts::portal_any_surface_key, "misc_portal_any_surface_key");
