@@ -65,7 +65,10 @@ namespace hack::cfg {
         push(&opts::airacceleration_fix, "misc_airacceleration_fix");
         push(&opts::airacceleration_value, "misc_airacceleration_value");
         push(&opts::fov_value, "misc_fov_value");
-        push(&opts::robot_unlock_all, "misc_robot_unlock_all");
+        push(&opts::portal_boost, "misc_portal_boost");
+        push(&opts::portal_boost_hold, "misc_portal_boost_hold");
+        push(&opts::portal_boost_key, "misc_portal_boost_key");
+        push(&opts::portal_boost_multiplier, "misc_portal_boost_multiplier");
         push(&opts::portal_any_surface, "misc_portal_any_surface");
         push(&opts::portal_any_surface_hold, "misc_portal_any_surface_hold");
         push(&opts::portal_any_surface_key, "misc_portal_any_surface_key");

@@ -109,127 +109,165 @@ namespace hack::menu {
         ImGui::SetNextWindowPos(ImGui::GetIO().DisplaySize * 0.5f, ImGuiCond_Once, ImVec2(0.5f, 0.5f));
         ImGui::SetNextWindowSize(ImVec2(kMenuWidth, kMenuHeight), ImGuiCond_Once);
 
-        if (!ImGui::Begin("portal2 cheeto / menu key: INSERT and F2", &opened, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize))
+        if (!ImGui::Begin("portal2 cheeto | INSERT / F2", &opened, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize))
             return ImGui::End();
 
         static bool first_render{true};
+        static int tab = 0;
+        static bool picking_any = false;
+        static bool picking_boost = false;
 
-        ImGui::Checkbox("bhop", &opts::bhop);
-        ImGui::Checkbox("autostrafer", &opts::autostrafer);
-        if (ImGui::Checkbox("airacceleration_fix", &opts::airacceleration_fix) || (first_render && opts::airacceleration_fix))
-            hack::features::misc::airacceleration_fix();
-        if (ImGui::Checkbox("unlock all robot features", &opts::robot_unlock_all) ||
-            (first_render && opts::robot_unlock_all))
-            hack::features::misc::apply_robot_unlock();
-
-        ImGui::Separator();
-
-        ImGui::SetNextItemWidth(120.f);
-        if (ImGui::InputFloat("airacceleration", &opts::airacceleration_value, 1.f, 5.f, "%1.f") ||
-            (first_render && std::fabsf(opts::airacceleration_value - kDefaultAirAccelerationValue) > 0.01f))
-            features::misc::apply_acceleration();
-
-        auto custom_acceleration_btn = [](const char* name, const float_t value) [[msvc::forceinline]] -> void {
-            ImGui::SameLine();
-            if (!ImGui::Button(name))
-                return;
-            features::misc::apply_acceleration(value);
-        };
-
-        custom_acceleration_btn("DEFAULT", kDefaultAirAccelerationValue);
-        custom_acceleration_btn("CSGO", kCSGOAirAccelerationValue);
-        custom_acceleration_btn("BHOP", kBhopAirAccelerationValue);
-
-        ImGui::Separator();
-
-        ImGui::SliderFloat("FOV", &opts::fov_value, 10.f, 160.f);
-        ImGui::SameLine();
-        if (ImGui::Button("Reset"))
-            opts::fov_value = kDefaultFOVValue;
-
-        ImGui::Separator();
-
-        ImGui::Checkbox("any surface (always)", &opts::portal_any_surface);
-        ImGui::SameLine();
-        ImGui::Checkbox("any surface (hold)", &opts::portal_any_surface_hold);
-        ImGui::SameLine();
-        ImGui::Text("key:");
-        ImGui::SameLine();
-        {
-            static bool picking = false;
-            key_picker("any", &opts::portal_any_surface_key, picking);
+        // tab bar
+        const char* tabs[] = {"Movement", "Portals", "Visuals", "Config"};
+        for (int i = 0; i < 4; ++i) {
+            if (i > 0)
+                ImGui::SameLine();
+            if (i == tab)
+                ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered));
+            if (ImGui::Button(tabs[i], ImVec2((kMenuWidth - 32.f) / 4.f, 24.f)))
+                tab = i;
+            if (i == tab)
+                ImGui::PopStyleColor();
         }
 
         ImGui::Separator();
+        ImGui::BeginChild("##page", ImVec2(0, 0), false);
 
-        auto chams_settings = [=](const std::string_view name, opts::chams_opts_t* ptr) [[msvc::forceinline]] -> void {
-            ImGui::PushID(name.data());
-            ImGui::Checkbox(name.data(), &ptr->m_enabled);
+        if (tab == 0) {
+            ImGui::Text("Movement");
+            ImGui::Separator();
+
+            ImGui::Checkbox("bhop", &opts::bhop);
+            ImGui::Checkbox("autostrafer", &opts::autostrafer);
+            if (ImGui::Checkbox("airacceleration_fix", &opts::airacceleration_fix) || (first_render && opts::airacceleration_fix))
+                hack::features::misc::airacceleration_fix();
+
+            ImGui::Separator();
+
+            ImGui::SetNextItemWidth(120.f);
+            if (ImGui::InputFloat("airacceleration", &opts::airacceleration_value, 1.f, 5.f, "%1.f") ||
+                (first_render && std::fabsf(opts::airacceleration_value - kDefaultAirAccelerationValue) > 0.01f))
+                features::misc::apply_acceleration();
+
+            auto custom_acceleration_btn = [](const char* name, const float_t value) [[msvc::forceinline]] -> void {
+                ImGui::SameLine();
+                if (!ImGui::Button(name))
+                    return;
+                features::misc::apply_acceleration(value);
+            };
+
+            custom_acceleration_btn("DEFAULT", kDefaultAirAccelerationValue);
+            custom_acceleration_btn("CSGO", kCSGOAirAccelerationValue);
+            custom_acceleration_btn("BHOP", kBhopAirAccelerationValue);
+
+            ImGui::Separator();
+
+            ImGui::SliderFloat("FOV", &opts::fov_value, 10.f, 160.f);
             ImGui::SameLine();
-            color_edit("Color", &ptr->m_color, 0);
+            if (ImGui::Button("Reset"))
+                opts::fov_value = kDefaultFOVValue;
+
+            ImGui::Separator();
+
+            ImGui::Text("Portal boost (reportal)");
+            ImGui::Checkbox("boost enabled", &opts::portal_boost);
+            ImGui::Checkbox("boost (hold)", &opts::portal_boost_hold);
+            ImGui::SameLine();
+            ImGui::Text("key:");
+            ImGui::SameLine();
+            key_picker("boost", &opts::portal_boost_key, picking_boost);
+
+            ImGui::SetNextItemWidth(200.f);
+            ImGui::SliderFloat("multiplier", &opts::portal_boost_multiplier, 2.f, 8.f, "%.1fx");
+            if (opts::portal_boost_multiplier < 2.f)
+                opts::portal_boost_multiplier = 2.f;
+            if (opts::portal_boost_multiplier > 8.f)
+                opts::portal_boost_multiplier = 8.f;
+        } else if (tab == 1) {
+            ImGui::Text("Portals");
+            ImGui::Separator();
+
+            ImGui::Checkbox("any surface (always)", &opts::portal_any_surface);
+            ImGui::Checkbox("any surface (hold)", &opts::portal_any_surface_hold);
+            ImGui::Text("key:");
+            ImGui::SameLine();
+            key_picker("any", &opts::portal_any_surface_key, picking_any);
+
+            ImGui::Separator();
+
+            // @fixme: @es3n1n: remove prefix_col_1/prefix_col_2
+            const auto portal_colors_settings = [](const std::string_view prefix, std::size_t index, const std::string_view prefix_col_1,
+                                                   const std::string_view prefix_col_2) [[msvc::forceinline]] -> void {
+                ImGui::PushID(prefix.data());
+
+                ImGui::Text(prefix.data());
+                ImGui::SameLine();
+
+                color_edit("Portal 1", &opts::portal_colors[index].m_portal_1, ImGuiColorEditFlags_NoAlpha, prefix_col_1.data());
+                ImGui::SameLine();
+                color_edit("Portal 2", &opts::portal_colors[index].m_portal_2, ImGuiColorEditFlags_NoAlpha, prefix_col_2.data());
+
+                ImGui::PopID();
+            };
+
+            portal_colors_settings("Player1:", 0, "p1c1", "p1c2");
+            portal_colors_settings("Player2:", 1, "p2c1", "p2c2");
+        } else if (tab == 2) {
+            ImGui::Text("Visuals");
+            ImGui::Separator();
+
+            auto chams_settings = [=](const std::string_view name, opts::chams_opts_t* ptr) [[msvc::forceinline]] -> void {
+                ImGui::PushID(name.data());
+                ImGui::Checkbox(name.data(), &ptr->m_enabled);
+                ImGui::SameLine();
+                color_edit("Color", &ptr->m_color, 0);
+                ImGui::SameLine();
+
+                ImGui::SetNextItemWidth(120.f);
+                ImGui::Combo("Type", &ptr->m_material, "Normal\0Flat\0");
+
+                ImGui::PopID();
+            };
+
+            chams_settings("Portalgun Chams", &opts::portal_gun_chams);
+            chams_settings("Chell Chams", &opts::chell_chams);
+            chams_settings("Wheatley Chams", &opts::wheatley_chams);
+
+            ImGui::Separator();
+
+            ImGui::Checkbox("Mat Ambient Light modification", &opts::mat_ambient_light_enabled);
+            ImGui::SameLine();
+            color_edit("Color", &opts::mat_ambient_light_value, 0, "matambient");
+
+            ImGui::Separator();
+
+            ImGui::Checkbox("Trails", &opts::trails);
+            ImGui::SameLine();
+            color_edit("Color", &opts::trails_color, 0, "trails");
             ImGui::SameLine();
 
             ImGui::SetNextItemWidth(120.f);
-            ImGui::Combo("Type", &ptr->m_material, "Normal\0Flat\0");
+            ImGui::SliderFloat("Life time", &opts::trails_life_time, 1.f, 15.f);
+        } else {
+            ImGui::Text("Config");
+            ImGui::Separator();
 
-            ImGui::PopID();
-        };
-
-        chams_settings("Portalgun Chams", &opts::portal_gun_chams);
-        chams_settings("Chell Chams", &opts::chell_chams);
-        chams_settings("Wheatley Chams", &opts::wheatley_chams);
-
-        ImGui::Separator();
-
-        ImGui::Checkbox("Mat Ambient Light modification", &opts::mat_ambient_light_enabled);
-        ImGui::SameLine();
-        color_edit("Color", &opts::mat_ambient_light_value, 0, "matambient");
-
-        ImGui::Separator();
-
-        ImGui::Checkbox("Trails", &opts::trails);
-        ImGui::SameLine();
-        color_edit("Color", &opts::trails_color, 0, "trails");
-        ImGui::SameLine();
-
-        ImGui::SetNextItemWidth(120.f);
-        ImGui::SliderFloat("Life time", &opts::trails_life_time, 1.f, 15.f);
-
-        ImGui::Separator();
-
-        // @fixme: @es3n1n: remove prefix_col_1/prefix_col_2
-        const auto portal_colors_settings = [](const std::string_view prefix, std::size_t index, const std::string_view prefix_col_1,
-                                               const std::string_view prefix_col_2) [[msvc::forceinline]] -> void {
-            ImGui::PushID(prefix.data());
-
-            ImGui::Text(prefix.data());
+            if (ImGui::Button("save"))
+                cfg::save("config");
             ImGui::SameLine();
+            if (ImGui::Button("load"))
+                cfg::read("config");
 
-            color_edit("Portal 1", &opts::portal_colors[index].m_portal_1, ImGuiColorEditFlags_NoAlpha, prefix_col_1.data());
+            ImGui::Separator();
+
+            if (ImGui::Button("randomize rainbow"))
+                cfg::randomize_rainbow();
             ImGui::SameLine();
-            color_edit("Portal 2", &opts::portal_colors[index].m_portal_2, ImGuiColorEditFlags_NoAlpha, prefix_col_2.data());
+            if (ImGui::Button("sync rainbow"))
+                cfg::sync_rainbow();
+        }
 
-            ImGui::PopID();
-        };
-
-        portal_colors_settings("Player1:", 0, "p1c1", "p1c2");
-        portal_colors_settings("Player2:", 1, "p2c1", "p2c2");
-
-        ImGui::Separator();
-
-        if (ImGui::Button("save"))
-            cfg::save("config");
-        ImGui::SameLine();
-        if (ImGui::Button("load"))
-            cfg::read("config");
-
-        ImGui::Separator();
-
-        if (ImGui::Button("randomize rainbow"))
-            cfg::randomize_rainbow();
-        ImGui::SameLine();
-        if (ImGui::Button("sync rainbow"))
-            cfg::sync_rainbow();
+        ImGui::EndChild();
 
         ImGui::End();
         first_render = false;
