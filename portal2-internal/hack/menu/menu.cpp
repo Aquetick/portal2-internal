@@ -115,7 +115,6 @@ namespace hack::menu {
         static bool first_render{true};
         static int tab = 0;
         static bool picking_any = false;
-        static bool picking_boost = false;
 
         // tab bar (note: never mutate `tab` inside the loop -
         // Push/PopStyleColor must stay balanced within one iteration)
@@ -171,33 +170,6 @@ namespace hack::menu {
             ImGui::SameLine();
             if (ImGui::Button("Reset"))
                 opts::fov_value = kDefaultFOVValue;
-
-            ImGui::Separator();
-
-            ImGui::Text("Portal boost (reportal)");
-            ImGui::Checkbox("boost enabled", &opts::portal_boost);
-            ImGui::Checkbox("boost (hold)", &opts::portal_boost_hold);
-            ImGui::SameLine();
-            ImGui::Text("key:");
-            ImGui::SameLine();
-            key_picker("boost", &opts::portal_boost_key, picking_boost);
-            ImGui::SameLine();
-            if (ImGui::Button("Reset##boostkey"))
-                opts::portal_boost_key = 0x42; // B
-
-            ImGui::SetNextItemWidth(200.f);
-            ImGui::SliderFloat("multiplier", &opts::portal_boost_multiplier, 2.f, 8.f, "%.1fx");
-            if (opts::portal_boost_multiplier < 2.f)
-                opts::portal_boost_multiplier = 2.f;
-            if (opts::portal_boost_multiplier > 8.f)
-                opts::portal_boost_multiplier = 8.f;
-
-            ImGui::SetNextItemWidth(200.f);
-            ImGui::SliderFloat("surge time", &opts::portal_boost_duration, 0.1f, 1.f, "%.2fs");
-            if (opts::portal_boost_duration < 0.1f)
-                opts::portal_boost_duration = 0.1f;
-            if (opts::portal_boost_duration > 1.f)
-                opts::portal_boost_duration = 1.f;
         } else if (tab == 1) {
             ImGui::Text("Portals");
             ImGui::Separator();

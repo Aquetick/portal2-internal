@@ -13,12 +13,10 @@ namespace hack::features::misc {
     void bhop(c_usercmd* cmd);
     void autostrafer(c_usercmd* cmd);
     void portal_any_surface();
-    void portal_boost();
 
     inline void create_move(c_usercmd* cmd) {
         autostrafer(cmd);
         bhop(cmd);
         portal_any_surface();
-        portal_boost();
     }
 } // namespace hack::features::misc
