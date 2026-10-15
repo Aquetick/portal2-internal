@@ -13,10 +13,39 @@ namespace hack::features::misc {
     void bhop(c_usercmd* cmd);
     void autostrafer(c_usercmd* cmd);
     void portal_any_surface();
+    void edge_jump(c_usercmd* cmd);
+    void jump_tracker(c_usercmd* cmd);
+    void quick_points();
+    void slowmo();
+    void render_tweaks();
+
+    // present (overlay)
+    //
+    void speedometer_overlay();
+
+    // last-jump state (tracker writes, overlay reads)
+    //
+    namespace jump {
+        inline bool has_takeoff = false;
+        inline vec3_t takeoff_pos{};
+        inline float takeoff_speed = 0.f;
+        inline float last_distance = 0.f;
+        inline float last_speed = 0.f;
+        inline bool has_result = false;
+    } // namespace jump
 
     inline void create_move(c_usercmd* cmd) {
         autostrafer(cmd);
         bhop(cmd);
         portal_any_surface();
+        edge_jump(cmd);
+        jump_tracker(cmd);
+        quick_points();
+        slowmo();
+        render_tweaks();
+    }
+
+    inline void present() {
+        speedometer_overlay();
     }
 } // namespace hack::features::misc

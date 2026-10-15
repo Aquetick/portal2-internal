@@ -50,6 +50,19 @@ namespace opts {
     inline bool portal_any_surface_hold = true;
     inline int portal_any_surface_key = 0x58; // X
 
+    inline bool speedometer = false;
+    inline bool jump_stats = false;
+    inline int quicksave_key = 0x75; // F6
+    inline int quickload_key = 0x76; // F7
+    inline bool slowmo = false;
+    inline bool slowmo_hold = true;
+    inline int slowmo_key = 0x12; // ALT
+    inline float slowmo_value = 0.3f; // 0.1x..2.0x
+    inline bool edgejump = false;
+    inline bool edgejump_hold = true;
+    inline int edgejump_key = 0x56; // V
+    inline bool fullbright = false;
+    inline bool nofog = false;
     inline bool mat_ambient_light_enabled = false;
     inline constinit color_t mat_ambient_light_value = {0, 0, 0};
 

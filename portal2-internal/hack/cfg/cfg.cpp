@@ -69,6 +69,20 @@ namespace hack::cfg {
         push(&opts::portal_any_surface_hold, "misc_portal_any_surface_hold");
         push(&opts::portal_any_surface_key, "misc_portal_any_surface_key");
 
+        push(&opts::speedometer, "misc_speedometer");
+        push(&opts::jump_stats, "misc_jump_stats");
+        push(&opts::quicksave_key, "misc_quicksave_key");
+        push(&opts::quickload_key, "misc_quickload_key");
+        push(&opts::slowmo, "misc_slowmo");
+        push(&opts::slowmo_hold, "misc_slowmo_hold");
+        push(&opts::slowmo_key, "misc_slowmo_key");
+        push(&opts::slowmo_value, "misc_slowmo_value");
+        push(&opts::edgejump, "misc_edgejump");
+        push(&opts::edgejump_hold, "misc_edgejump_hold");
+        push(&opts::edgejump_key, "misc_edgejump_key");
+        push(&opts::fullbright, "misc_fullbright");
+        push(&opts::nofog, "misc_nofog");
+
         push_chams(&opts::portal_gun_chams, "portal_gun_chams");
         push_chams(&opts::chell_chams, "chell_chams");
         push_chams(&opts::wheatley_chams, "wheatley_chams");

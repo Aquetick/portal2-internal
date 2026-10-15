@@ -13,6 +13,7 @@ namespace hack::features {
     }
 
     __forceinline void present() {
+        misc::present();
         visuals::present();
     }
 } // namespace hack::features

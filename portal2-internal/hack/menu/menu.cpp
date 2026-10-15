@@ -115,18 +115,22 @@ namespace hack::menu {
         static bool first_render{true};
         static int tab = 0;
         static bool picking_any = false;
+        static bool picking_qsave = false;
+        static bool picking_qload = false;
+        static bool picking_slowmo = false;
+        static bool picking_edge = false;
 
         // tab bar (note: never mutate `tab` inside the loop -
         // Push/PopStyleColor must stay balanced within one iteration)
-        const char* tabs[] = {"Movement", "Portals", "Visuals", "Config"};
+        const char* tabs[] = {"Movement", "Portals", "Visuals", "Misc", "Config"};
         int pending_tab = -1;
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 5; ++i) {
             const bool is_active = (i == tab);
             if (i > 0)
                 ImGui::SameLine();
             if (is_active)
                 ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered));
-            if (ImGui::Button(tabs[i], ImVec2((kMenuWidth - 32.f) / 4.f, 24.f)))
+            if (ImGui::Button(tabs[i], ImVec2((kMenuWidth - 32.f) / 5.f, 24.f)))
                 pending_tab = i;
             if (is_active)
                 ImGui::PopStyleColor();
@@ -238,6 +242,56 @@ namespace hack::menu {
 
             ImGui::SetNextItemWidth(120.f);
             ImGui::SliderFloat("Life time", &opts::trails_life_time, 1.f, 15.f);
+        } else if (tab == 3) {
+            ImGui::Text("Misc");
+            ImGui::Separator();
+
+            ImGui::Checkbox("speedometer", &opts::speedometer);
+            ImGui::Checkbox("jump stats", &opts::jump_stats);
+
+            ImGui::Separator();
+
+            if (ImGui::Button("quicksave"))
+                portal::engine_client->server_cmd("save quick");
+            ImGui::SameLine();
+            key_picker("qsave", &opts::quicksave_key, picking_qsave);
+            ImGui::SameLine();
+            if (ImGui::Button("quickload"))
+                portal::engine_client->server_cmd("load quick");
+            ImGui::SameLine();
+            key_picker("qload", &opts::quickload_key, picking_qload);
+
+            ImGui::Separator();
+
+            ImGui::Text("Slow motion");
+            ImGui::Checkbox("slowmo enabled", &opts::slowmo);
+            ImGui::Checkbox("slowmo (hold)", &opts::slowmo_hold);
+            ImGui::SameLine();
+            ImGui::Text("key:");
+            ImGui::SameLine();
+            key_picker("slowmo", &opts::slowmo_key, picking_slowmo);
+
+            ImGui::SetNextItemWidth(200.f);
+            ImGui::SliderFloat("speed", &opts::slowmo_value, 0.1f, 2.f, "%.2fx");
+            if (opts::slowmo_value < 0.1f)
+                opts::slowmo_value = 0.1f;
+            if (opts::slowmo_value > 2.f)
+                opts::slowmo_value = 2.f;
+
+            ImGui::Separator();
+
+            ImGui::Text("Edge jump");
+            ImGui::Checkbox("edgejump enabled", &opts::edgejump);
+            ImGui::Checkbox("edgejump (hold)", &opts::edgejump_hold);
+            ImGui::SameLine();
+            ImGui::Text("key:");
+            ImGui::SameLine();
+            key_picker("edge", &opts::edgejump_key, picking_edge);
+
+            ImGui::Separator();
+
+            ImGui::Checkbox("fullbright", &opts::fullbright);
+            ImGui::Checkbox("no fog", &opts::nofog);
         } else {
             ImGui::Text("Config");
             ImGui::Separator();

@@ -114,6 +114,21 @@
     <ClCompile Include="hack\features\misc\portal_any_surface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hack\features\misc\edgejump.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hack\features\misc\quicksave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hack\features\misc\slowmo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hack\features\misc\speedometer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hack\features\misc\tweaks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="hack\hooks\hooked\override_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
