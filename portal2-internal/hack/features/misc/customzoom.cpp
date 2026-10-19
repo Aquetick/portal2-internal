@@ -25,6 +25,8 @@ namespace hack::features::misc {
     bool custom_zoom_zoomed() {
         return zoom::zoomed;
     }
+
+    void custom_zoom() {
         if (!opts::custom_zoom) {
             zoom::zoomed = false;
             return;
