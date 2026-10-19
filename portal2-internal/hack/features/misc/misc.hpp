@@ -10,12 +10,15 @@ namespace hack::features::misc {
 
     // create-move
     //
+    // create-move
+    //
     void bhop(c_usercmd* cmd);
     void autostrafer(c_usercmd* cmd);
     void portal_any_surface();
     void edge_jump(c_usercmd* cmd);
     void jump_tracker(c_usercmd* cmd);
     void button_glitch(c_usercmd* cmd);
+    void custom_zoom();
     void quick_points();
     void render_tweaks();
 
@@ -50,8 +53,12 @@ namespace hack::features::misc {
         edge_jump(cmd);
         jump_tracker(cmd);
         button_glitch(cmd);
+        custom_zoom();
         quick_points();
-        render_tweaks();
+        // FOV application lives in override_view (client-side, visual only).
+        // custom zoom overrides fov_value while zoomed.
+        if (opts::custom_zoom && zoom::zoomed)
+            opts::fov_value = opts::custom_zoom_fov;
     }
 
     inline void present() {

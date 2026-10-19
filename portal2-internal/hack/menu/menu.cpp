@@ -119,6 +119,7 @@ namespace hack::menu {
         static bool picking_qload = false;
         static bool picking_edge = false;
         static bool picking_btng = false;
+        static bool picking_zoom = false;
 
         // tab bar (note: never mutate `tab` inside the loop -
         // Push/PopStyleColor must stay balanced within one iteration)
@@ -275,6 +276,26 @@ namespace hack::menu {
 
             ImGui::Checkbox("fullbright", &opts::fullbright);
             ImGui::Checkbox("no fog", &opts::nofog);
+
+            ImGui::Separator();
+
+            ImGui::Text("Custom zoom");
+            ImGui::Checkbox("custom zoom enabled", &opts::custom_zoom);
+            ImGui::Text("key:");
+            ImGui::SameLine();
+            key_picker("zoom", &opts::custom_zoom_key, picking_zoom);
+            ImGui::SameLine();
+            if (ImGui::Button("Reset##zoomkey"))
+                opts::custom_zoom_key = VK_MBUTTON;
+
+            ImGui::SetNextItemWidth(200.f);
+            ImGui::SliderFloat("zoom FOV", &opts::custom_zoom_fov, 10.f, 160.f);
+            ImGui::SetNextItemWidth(200.f);
+            ImGui::SliderFloat("zoom sens", &opts::custom_zoom_sens, 0.1f, 1.f, "%.2f");
+            if (opts::custom_zoom_sens < 0.1f)
+                opts::custom_zoom_sens = 0.1f;
+            if (opts::custom_zoom_sens > 1.f)
+                opts::custom_zoom_sens = 1.f;
 
             ImGui::Separator();
 

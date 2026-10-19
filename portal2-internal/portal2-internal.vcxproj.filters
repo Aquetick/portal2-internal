@@ -114,6 +114,9 @@
     <ClCompile Include="hack\features\misc\portal_any_surface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hack\features\misc\customzoom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="hack\features\misc\edgejump.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

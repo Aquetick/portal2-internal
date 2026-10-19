@@ -82,6 +82,10 @@ namespace hack::cfg {
         push(&opts::button_glitch_hold, "misc_button_glitch_hold");
         push(&opts::button_glitch_key, "misc_button_glitch_key");
         push(&opts::button_touch_ticks, "misc_button_touch_ticks");
+        push(&opts::custom_zoom, "misc_custom_zoom");
+        push(&opts::custom_zoom_key, "misc_custom_zoom_key");
+        push(&opts::custom_zoom_fov, "misc_custom_zoom_fov");
+        push(&opts::custom_zoom_sens, "misc_custom_zoom_sens");
 
         push_chams(&opts::portal_gun_chams, "portal_gun_chams");
         push_chams(&opts::chell_chams, "chell_chams");
