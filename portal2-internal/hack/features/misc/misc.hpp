@@ -19,7 +19,9 @@ namespace hack::features::misc {
     void jump_tracker(c_usercmd* cmd);
     void button_glitch(c_usercmd* cmd);
     // expose zoom state as accessor (defined in customzoom.cpp)
+    void custom_zoom();
     bool custom_zoom_zoomed();
+    void quick_points();
     void render_tweaks();
 
     // present (overlay)
@@ -55,10 +57,7 @@ namespace hack::features::misc {
         button_glitch(cmd);
         custom_zoom();
         quick_points();
-        // FOV application lives in override_view (client-side, visual only).
-        // custom zoom overrides fov_value while zoomed.
-        if (opts::custom_zoom && hack::features::misc::custom_zoom_zoomed())
-            opts::fov_value = opts::custom_zoom_fov;
+        render_tweaks();
     }
 
     inline void present() {
