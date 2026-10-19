@@ -65,7 +65,7 @@ namespace opts {
     inline int button_touch_ticks = 1; // auto step off after N ticks touching (1..5)
 
     inline bool custom_zoom = false;
-    inline int custom_zoom_key = VK_MBUTTON; // middle mouse
+    inline int custom_zoom_key = 0x04; // middle mouse (mouse wheel click)
     inline float custom_zoom_fov = 30.f; // target FOV while zoomed
     inline float custom_zoom_sens = 0.5f; // mouse sensitivity multiplier while zoomed
     inline bool mat_ambient_light_enabled = false;

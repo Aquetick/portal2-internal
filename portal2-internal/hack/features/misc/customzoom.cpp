@@ -21,7 +21,10 @@ namespace hack::features::misc {
         inline bool sens_saved = false;
     } // namespace zoom
 
-    void custom_zoom() {
+    // accessor for external callers (override_view / misc.hpp)
+    bool custom_zoom_zoomed() {
+        return zoom::zoomed;
+    }
         if (!opts::custom_zoom) {
             zoom::zoomed = false;
             return;
